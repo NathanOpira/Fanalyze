@@ -3,21 +3,21 @@ import pandas as pd
 from datetime import datetime
 from pytrends.request import TrendReq
 
-# Initialize pytrends
+# Initializing pytrends.
 pytrends = TrendReq(hl='en-US', tz=360)
 
-# List of players to track
+# List of players to track.
 players = [
-    "Llaix Moriba", "Kamaldeen Sulemana", "Carlos Baleba", "Bryan Mbuemo",
+    "Ilaix Moriba", "Kamaldeen Sulemana", "Carlos Baleba", "Bryan Mbuemo",
     "Ismaila Sarr", "Mohamed Salah", "Samuel Chukwueze", "Antoine Semenyo",
     "Achraf Hakimi", "Ademola Lookman", "Serhou Guirassy", "Bilal El Khannouss", "Mohammed Kudus"
 ]
 
-# Google Trends allows max 5 terms at once
+# Google Trends allows max 5 terms at once.
 batch_size = 5
 batches = [players[i:i + batch_size] for i in range(0, len(players), batch_size)]
 
-# Fetch trends per batch
+# Fetching trends per batch.
 all_data = []
 
 for batch in batches:
@@ -30,7 +30,7 @@ for batch in batches:
     except Exception as e:
         print(f"⚠ Error fetching batch {batch}: {e}")
 
-# Combine into one DataFrame
+# Combining into one DataFrame.
 if all_data:
     combined_df = pd.concat(all_data, axis=1)
     today = datetime.now().strftime("%Y-%m-%d")
