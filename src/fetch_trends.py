@@ -36,6 +36,6 @@ if all_data:
     today = datetime.now().strftime("%Y-%m-%d")
     output_file = f"data/raw/google_trends_raw_{today}.csv"
     combined_df.to_csv(output_file)
-    print(f"✅ Trends data saved to {output_file}")
+    print(f"Trends data saved to {output_file}")
 else:
-    print("⚠ No data fetched.")
+    print("No data fetched.")
