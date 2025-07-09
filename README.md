@@ -56,3 +56,6 @@ fanalyze/
 ├── requirements.txt
 ├── .gitignore
 └── vercel.json
+
+Built by @NathanOpira
+Powered by Python and passion for sports tech in Africa and beyond.

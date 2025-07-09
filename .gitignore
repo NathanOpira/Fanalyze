@@ -1,0 +1,25 @@
+# Python
+_pycache_/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+ENV/
+.venv/
+
+# Data files
+data/raw/
+data/processed/
+
+# Notebooks
+.ipynb_checkpoints/
+
+# VSCode or JetBrains
+.vscode/
+.idea/
+
+# System
+.DS_Store
+Thumbs.db
