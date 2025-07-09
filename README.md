@@ -9,8 +9,8 @@ Built with Python and Plotly Dash, it offers real-time insights into how players
 ## 🌍 MVP Scope
 
 ### 🎯 Tracked Players
-- Elias Moriba
-- Kamaldeen Suleimana
+- Llaix Moriba
+- Kamaldeen Sulemana
 - Carlos Baleba
 - Bryan Mbuemo
 - Ismaila Sarr
