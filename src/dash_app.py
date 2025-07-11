@@ -1,3 +1,5 @@
+from src.utils import get_player_summary
+
 import pandas as pd
 from datetime import datetime
 
@@ -32,6 +34,8 @@ app.layout = html.Div([
     dcc.Graph(id='trend-graph')
 ])
 
+html.Div(id='player-summary-container', style={"display": "flex", "justifyContent": "space-around", "margin": "40px"}),
+
 # Callback.
 @app.callback(
     Output('trend-graph', 'figure'),
@@ -46,6 +50,34 @@ def update_graph(selected_players):
                   title="Google Search Trends (Last 3 Months)")
     fig.update_layout(legend_title_text='Players')
     return fig
+
+@app.callback(
+    Output('player-summary-container', 'children'),
+    Input('player-dropdown', 'value')
+)
+def update_player_summary(selected_players):
+    if not selected_players:
+        return []
+
+    summaries = []
+    for player in selected_players[:2]:  # only first two
+        stats = get_player_summary(df, player)
+        card = html.Div([
+            html.H3(stats['name']),
+            html.P(f"Avg (last 7 days): {stats['avg_score']}"),
+            html.P(f"Peak: {stats['peak_score']} on {stats['peak_date']}"),
+            html.P(f"Spike count (>80): {stats['spike_count']}"),
+        ], style={
+            "padding": "20px",
+            "border": "1px solid #ccc",
+            "borderRadius": "8px",
+            "width": "40%",
+            "backgroundColor": "#f9f9f9",
+            "boxShadow": "2px 2px 6px rgba(0,0,0,0.1)"
+        })
+        summaries.append(card)
+
+    return summaries
 
 # Run.
 if __name__ == "__main__":
