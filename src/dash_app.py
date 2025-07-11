@@ -1,4 +1,4 @@
-from src.utils import get_player_summary
+from utils import get_player_summary
 
 import pandas as pd
 from datetime import datetime
@@ -31,10 +31,12 @@ app.layout = html.Div([
         style={"margin": "20px"}
     ),
 
-    dcc.Graph(id='trend-graph')
+    dcc.Graph(id='trend-graph'),
+
+    html.Div(id='player-summary-container', style={"display": "flex", "justifyContent": "space-around", "margin": "40px"}),
+
 ])
 
-html.Div(id='player-summary-container', style={"display": "flex", "justifyContent": "space-around", "margin": "40px"}),
 
 # Callback.
 @app.callback(
