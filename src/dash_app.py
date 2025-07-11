@@ -20,7 +20,14 @@ app.title = "Fanalyze Dashboard"
 
 # Layout.
 app.layout = html.Div([
-    html.H1("📈 Fanalyze: African Footballer Popularity Trends", style={"textAlign": "center"}),
+    html.Div([
+        html.Img(src="/assets/logo.png", style={"height": "70px", "marginBottom": "10px"})
+    ], style={"textAlign": "center"}),
+
+    html.H1(
+        "📈 Fanalyze: African Footballer Popularity Trends",
+        style={"textAlign": "center", "color": "#2c3e5o", "fontWeight": "bold", "marginTop": "30px", "fontSize": "36px"}
+    ),
 
     dcc.Dropdown(
         id='player-dropdown',
@@ -33,8 +40,10 @@ app.layout = html.Div([
 
     dcc.Graph(id='trend-graph'),
 
-    html.Div(id='player-summary-container', style={"display": "flex", "justifyContent": "space-around", "margin": "40px"}),
-
+    html.Div(
+        id='player-summary-container',
+        style={"display": "flex", "justifyContent": "space-around", "margin": "40px"}
+    ),
 ])
 
 
@@ -69,14 +78,7 @@ def update_player_summary(selected_players):
             html.P(f"Avg (last 7 days): {stats['avg_score']}"),
             html.P(f"Peak: {stats['peak_score']} on {stats['peak_date']}"),
             html.P(f"Spike count (>80): {stats['spike_count']}"),
-        ], style={
-            "padding": "20px",
-            "border": "1px solid #ccc",
-            "borderRadius": "8px",
-            "width": "40%",
-            "backgroundColor": "#f9f9f9",
-            "boxShadow": "2px 2px 6px rgba(0,0,0,0.1)"
-        })
+        ], className="card")
         summaries.append(card)
 
     return summaries
