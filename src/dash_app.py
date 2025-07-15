@@ -19,9 +19,11 @@ app = dash.Dash(__name__)
 app.title = "Fanalyze Dashboard"
 
 # Layout.
+app = Dash(__name__, external_stylesheets=["https://fonts.googleapis.com/css2?family=Teko:wght@400;600&display=swap"
+])
 app.layout = html.Div([
     html.Div([
-        html.Img(src="/assets/logo.jpg", style={"height": "60px", "marginRight": "15px"})
+        html.Img(src="/assets/logo.jpg", style={"height": "60px", "marginRight": "15px"}),
         html.H1("Fanalyze: African Footballer Popularity Trends"),
     ],  style={
         "display": "flex",
@@ -62,23 +64,60 @@ app.layout = html.Div([
 # Callback.
 @app.callback(
     Output('trend-graph', 'figure'),
-    [Input('player-dropdown', 'value')]
+    Input('player-dropdown', 'value')
 )
 def update_graph(selected_players):
     if not selected_players:
         return px.line(title="No players selected.")
 
-    fig = px.line(df[selected_players],
-                  labels={"value": "Popularity", "index": "Date"},
-                  title="Google Search Trends (Last 3 Months)")
-    fig.update_layout(legend_title_text='Players')
-    fig.update_layout(
-        plot_bgcolor='#1F2937',
-        paper_bgcolor='#1F2937',
-        font=dict(color='#F9FAFB'),
-        title_font_size=24,
-        legend=dict(bgcolor='#111827', bordercolor='gray', borderwidth=1)
+    fig = px.line(
+        df[selected_players],
+        labels={"value": "Popularity", "index": "Date"},
+        title="Google Search Trends (Last 3 Months)",
+        color_discrete_map={
+            "Mohamed Salah": "#e60000",
+            "Achraf Hakimi": "#0055ff",
+            "Ismaila Sarr": "#00b894",
+            "Kamaldeen Sulemana": "#e67e22",
+            "Carlos Baleba": "#f1c40f",
+            "Bryan Mbuemo": "#9b59b6",
+            "Samuel Chukweze": "#1abc9c",
+            "Antoine Semenyo": "#2980b9",
+            "Ademola Lookman": "#c0392b",
+            "Serhou Guirassy": "#2ecc71",
+            "Bilal El Khannouss": "#d35400",
+            "Mohammed Kudus": "#8e44ad",
+            "Ilaix Moriba": "#34495e"
+        },
+        template="plotly_dark"
     )
+
+    # Custom hover text with avatars
+    for trace in fig.data:
+        player = trace.name
+        avatar_path = f"/assets/avatars/{player.lower().replace(' ', '_')}.jpg"
+        trace.hovertemplate = (
+            f"<b>{player}</b><br>" +
+            "Date: %{x}<br>" +
+            "Popularity: %{y}<br><br>" +
+            f"<img src='{avatar_path}' style='width:40px;height:40px;border-radius:50%;'><extra></extra>"
+        )
+        trace.mode = "lines+markers"
+        trace.line.width = 3
+
+    fig.update_layout(
+        plot_bgcolor="#1c1c1c",
+        paper_bgcolor="#1c1c1c",
+        font=dict(color="#f2f2f2"),
+        title_font_size=24,
+        legend=dict(
+            bgcolor="#1c1c1c",
+            bordercolor="gray",
+            borderwidth=1
+        ),
+        legend_title_text="Players"
+    )
+
     return fig
 
 @app.callback(
