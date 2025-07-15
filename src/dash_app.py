@@ -4,7 +4,7 @@ import pandas as pd
 from datetime import datetime
 
 import dash
-from dash import dcc, html, Input, Output
+from dash import Dash, html, dcc, Input, Output
 import plotly.express as px
 
 # Getting today's file.
@@ -96,6 +96,7 @@ def update_graph(selected_players):
     for trace in fig.data:
         player = trace.name
         avatar_path = f"/assets/avatars/{player.lower().replace(' ', '_')}.jpg"
+
         trace.hovertemplate = (
             f"<b>{player}</b><br>" +
             "Date: %{x}<br>" +
