@@ -22,6 +22,7 @@ app.title = "Fanalyze Dashboard"
 app = Dash(__name__, external_stylesheets=["https://fonts.googleapis.com/css2?family=Teko:wght@400;600&display=swap"
 ])
 app.layout = html.Div([
+    html.Div(id='trending-player-card'),
     html.Div([
         html.Img(src="/assets/logo.jpg", style={"height": "60px", "marginRight": "15px"}),
         html.H1("Fanalyze: African Footballer Popularity Trends"),
@@ -42,7 +43,31 @@ app.layout = html.Div([
         style={"margin": "20px"}
     ),
 
-    dcc.Graph(id='trend-graph'),
+    html.Div([
+    html.Div(id='trend-graph-container', children=[
+        dcc.Graph(id='trend-graph')
+    ], style={"flex": "2", "padding": "10px"}),
+
+    html.Div(id='trending-player-card', style={"flex": "1", "padding": "10px"})
+], style={
+    "display": "flex",
+    "flexWrap": "wrap",
+    "justifyContent": "space-between",
+    "alignItems": "flex-start",
+    "marginTop": "30px"
+}),
+
+    html.Div(id='fan-buzz', style={
+    "backgroundColor": "#121212",
+    "color": "#f2f2f2",
+    "padding": "20px",
+    "borderRadius": "10px",
+    "marginTop": "30px",
+    "boxShadow": "0 0 8px #00ff99",
+    "maxWidth": "500px",
+    "fontFamily": "Teko, sans-serif",
+    "fontSize": "18px"
+}),
 
     html.Div(
         id='player-summary-container',
@@ -61,7 +86,7 @@ app.layout = html.Div([
 ])
 
 
-# Callback.
+# Callbacks.
 @app.callback(
     Output('trend-graph', 'figure'),
     Input('player-dropdown', 'value')
@@ -122,6 +147,39 @@ def update_graph(selected_players):
     return fig
 
 @app.callback(
+    Output('trending-player-card', 'children'),
+    Input('player-dropdown', 'value')
+)
+def update_trending_card(selected_players):
+    if not selected_players:
+        return html.Div("No players selected")
+
+    # Calculate weekly change
+    last_7 = df[selected_players].tail(7).mean()
+    prev_7 = df[selected_players].iloc[-14:-7].mean()
+    change = ((last_7 - prev_7) / prev_7) * 100
+
+    trending_player = change.idxmax()
+    trend_value = round(change.max(), 2)
+    avatar_path = f"/assets/avatars/{trending_player.lower().replace(' ', '_')}.jpg"
+
+    return html.Div([
+        html.Img(src=avatar_path, style={
+            "width": "80px", "height": "80px", "borderRadius": "50%", "marginBottom": "10px"
+        }),
+        html.H3(f"{trending_player}", style={"margin": "5px 0", "color": "#00ff99"}),
+        html.P(f"🔥 Popularity up {trend_value}% this week!", style={"fontSize": "16px"})
+    ], style={
+        "backgroundColor": "#1e1e1e",
+        "padding": "20px",
+        "borderRadius": "10px",
+        "boxShadow": "0 0 10px #00ff99",
+        "textAlign": "center",
+        "width": "250px",
+        "margin": "auto"
+    }, className="trending-animate")
+
+@app.callback(
     Output('player-summary-container', 'children'),
     Input('player-dropdown', 'value')
 )
@@ -141,6 +199,27 @@ def update_player_summary(selected_players):
         summaries.append(card)
 
     return summaries
+
+@app.callback(
+    Output('fan-buzz', 'children'),
+    Input('player-dropdown', 'value')
+)
+def update_fan_buzz(selected_players):
+    if not selected_players:
+        return html.Div("No players selected")
+
+    # Mock buzz data (simulate real-time headlines)
+    fake_buzz = [
+        "🗣 Salah’s Champions League form is back in the news",
+        "🔥 Kamaldeen’s sprint clip goes viral on TikTok",
+        "🎯 Kudus leads search spikes after Man of the Match display",
+        "🇲🇦 Hakimi’s recovery stats spark debate online",
+        "💥 Lookman’s free kick trending in Nigeria & UK"
+    ]
+
+    return html.Ul([
+        html.Li(buzz, style={"marginBottom": "10px"}) for buzz in fake_buzz
+    ])
 
 # Run.
 if __name__ == "__main__":

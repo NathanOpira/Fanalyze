@@ -49,3 +49,48 @@ h1 {
     border-radius: 10px;
     box-shadow: 0 0 8px #444;
 }
+
+#trending-player-card {
+    margin-top: 30px;
+}
+
+@keyframes pop-in {
+  0% {
+    transform: scale(0.9);
+    opacity: 0.5;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.trending-animate {
+  animation: pop-in 0.6s ease-out;
+  transition: all 0.3s ease-in-out;
+  box-shadow: 0 0 15px #00ff99;
+}
+
+#fan-buzz ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+#fan-buzz li {
+  animation: fadeInUp 0.6s ease-in-out;
+}
+
+@keyframes fadeInUp {
+  0% {
+    transform: translateY(10px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
