@@ -14,6 +14,88 @@ data_path = f"data/processed/google_trends_cleaned_{today}.csv"
 # Loading data.
 df = pd.read_csv(data_path, index_col=0, parse_dates=True)
 
+# inserting players' metadata.
+player_metadata = {
+    "Elias Moriba": {
+        "club": "RB Leipzig",
+        "country": "🇬🇳 Guinea",
+        "position": "Midfielder",
+        "bio": "Highly rated for his strength and passing at a young age."
+    },
+    "Kamaldeen Suleimana": {
+        "club": "Southampton",
+        "country": "🇬🇭 Ghana",
+        "position": "Winger",
+        "bio": "Electric speed and raw dribbling talent define his game."
+    },
+    "Carlos Baleba": {
+        "club": "Brighton & Hove Albion",
+        "country": "🇨🇲 Cameroon",
+        "position": "Midfielder",
+        "bio": "Box-to-box engine with strong defensive instincts."
+    },
+    "Bryan Mbuemo": {
+        "club": "Brentford",
+        "country": "🇨🇲 Cameroon",
+        "position": "Forward",
+        "bio": "Smart finisher and creative force in the Premier League."
+    },
+    "Ismaila Saar": {
+        "club": "Olympique Marseille",
+        "country": "🇸🇳 Senegal",
+        "position": "Winger",
+        "bio": "Explosive pace and goal threat on the flanks."
+    },
+    "Mohamed Salah": {
+        "club": "Liverpool",
+        "country": "🇪🇬 Egypt",
+        "position": "Forward",
+        "bio": "Global icon known for scoring, speed and leadership."
+    },
+    "Sammy Chukweze": {
+        "club": "AC Milan",
+        "country": "🇳🇬 Nigeria",
+        "position": "Winger",
+        "bio": "Left-footed dribbler with flair and pace to burn."
+    },
+    "Antoine Semenyo": {
+        "club": "Bournemouth",
+        "country": "🇬🇭 Ghana",
+        "position": "Forward",
+        "bio": "Direct attacker with strength and energy up front."
+    },
+    "Achraf Hakimi": {
+        "club": "Paris Saint-Germain",
+        "country": "🇲🇦 Morocco",
+        "position": "Right-back",
+        "bio": "Lightning fast fullback, a threat at both ends."
+    },
+    "Ademola Lookman": {
+        "club": "Atalanta",
+        "country": "🇳🇬 Nigeria",
+        "position": "Winger",
+        "bio": "Versatile attacker with an eye for spectacular goals."
+    },
+    "Serhou Guirassy": {
+        "club": "VfB Stuttgart",
+        "country": "🇬🇳 Guinea",
+        "position": "Striker",
+        "bio": "Aerial threat and clinical finisher in the Bundesliga."
+    },
+    "Bilal El Khannouss": {
+        "club": "Genk",
+        "country": "🇲🇦 Morocco",
+        "position": "Midfielder",
+        "bio": "Young creator with strong vision and technique."
+    },
+    "Mohammed Kudus": {
+        "club": "West Ham United",
+        "country": "🇬🇭 Ghana",
+        "position": "Midfielder",
+        "bio": "Explosive dribbler, equally strong as creator and scorer."
+    }
+}
+
 # App init.
 app = dash.Dash(__name__)
 app.title = "Fanalyze Dashboard"
@@ -22,9 +104,12 @@ app.title = "Fanalyze Dashboard"
 app = Dash(__name__, external_stylesheets=["https://fonts.googleapis.com/css2?family=Teko:wght@400;600&display=swap"
 ])
 app.layout = html.Div([
-    html.Div(id='trending-player-card'),
+    dcc.Store(id='clicked-player'),
     html.Div([
-        html.Img(src="/assets/logo.jpg", style={"height": "60px", "marginRight": "15px"}),
+        html.Img(src="/assets/logo.jpg",
+                 style={
+                     "height": "60px",
+                     "marginRight": "15px"}),
         html.H1("Fanalyze: African Footballer Popularity Trends"),
     ],  style={
         "display": "flex",
@@ -44,34 +129,68 @@ app.layout = html.Div([
     ),
 
     html.Div([
-    html.Div(id='trend-graph-container', children=[
-        dcc.Graph(id='trend-graph')
-    ], style={"flex": "2", "padding": "10px"}),
+        html.Div(
+            id='trend-graph-container',
+            children=[dcc.Graph(id='trend-graph')],
+            style={"flex": "2", "padding": "10px"}
+        ),
+        html.Div(
+            id='trending-player-card',
+            style={"flex": "1", "padding": "10px"}
+        )
+    ], style={
+       "display": "flex",
+       "flexWrap": "wrap",
+       "justifyContent": "space-between",
+       "alignItems": "flex-start",
+       "marginTop": "30px"
+    }),
 
-    html.Div(id='trending-player-card', style={"flex": "1", "padding": "10px"})
-], style={
-    "display": "flex",
-    "flexWrap": "wrap",
-    "justifyContent": "space-between",
-    "alignItems": "flex-start",
-    "marginTop": "30px"
-}),
+    html.Div(
+        id='fan-buzz',
+        style={
+            "backgroundColor": "#121212",
+            "color": "#f2f2f2",
+            "padding": "20px",
+            "borderRadius": "10px",
+            "marginTop": "30px",
+            "boxShadow": "0 0 8px #00ff99",
+            "maxWidth": "500px",
+            "fontFamily": "Teko, sans-serif",
+            "fontSize": "18px"
+        }
+    ),
 
-    html.Div(id='fan-buzz', style={
-    "backgroundColor": "#121212",
-    "color": "#f2f2f2",
-    "padding": "20px",
-    "borderRadius": "10px",
-    "marginTop": "30px",
-    "boxShadow": "0 0 8px #00ff99",
-    "maxWidth": "500px",
-    "fontFamily": "Teko, sans-serif",
-    "fontSize": "18px"
-}),
+    html.Div(
+        id='leaderboard-container',
+        style={
+           "marginTop": "40px",
+           "padding": "20px",
+           "backgroundColor": "#121212",
+           "borderRadius": "10px",
+           "boxShadow": "0 0 10px #00ff99"
+        }
+    ),
+
+    html.Div(
+        id='player-info-container',
+        style={
+            "marginTop": "30px",
+            "padding": "20px",
+            "backgroundColor": "#121212",
+            "borderRadius": "10px",
+            "boxShadow": "0 0 8px #00ff99",
+            "color": "#f2f2f2",
+        }
+    ),
 
     html.Div(
         id='player-summary-container',
-        style={"display": "flex", "justifyContent": "space-around", "margin": "40px"}
+        style={
+            "display": "flex",
+            "justifyContent": "space-around",
+            "margin": "40px"
+        }
     ),
 
     html.Footer(
@@ -87,6 +206,20 @@ app.layout = html.Div([
 
 
 # Callbacks.
+from dash import ctx, ALL  # This is important in newer Dash versions
+
+@app.callback(
+    Output('clicked-player', 'data'),
+    Input({'type': 'player-card', 'index': ALL}, 'n_clicks'),
+)
+def store_clicked_player(n_clicks_list):
+    # Find which button was clicked (value > 0)
+    triggered = ctx.triggered_id
+    if not triggered:
+        return dash.no_update
+
+    return triggered['index']
+
 @app.callback(
     Output('trend-graph', 'figure'),
     Input('player-dropdown', 'value')
@@ -220,6 +353,119 @@ def update_fan_buzz(selected_players):
     return html.Ul([
         html.Li(buzz, style={"marginBottom": "10px"}) for buzz in fake_buzz
     ])
+
+@app.callback(
+    Output('leaderboard-container', 'children'),
+    Input('player-dropdown', 'value')
+)
+def update_leaderboard(selected_players):
+    if not selected_players:
+        return html.Div("No players selected", style={"color": "#888"})
+
+    # Filtering last 7 days of data.
+    recent_df = df.tail(7)  # or use df[df['date'] > (today - timedelta)]
+
+    # Computing average score for each selected player.
+    scores = {
+        player: round(recent_df[player].mean(), 1)
+        for player in selected_players if player in recent_df.columns
+    }
+
+    # Sorting and getting top 5.
+    top_players = sorted(scores.items(), key=lambda x: x[1], reverse=True)[:5]
+
+    # Creating leaderboard cards.
+    cards = []
+    for i, (player, score) in enumerate(top_players, start=1):
+        avatar_path = f"/assets/avatars/{player.lower().replace(' ', '_')}.jpg"
+        cards.append(html.Div([
+            html.Img(src=avatar_path, style={
+                "width": "50px", "height": "50px", "borderRadius": "50%", "marginRight": "10px"
+            }),
+            html.Div([
+                html.H4(f"{i}. {player}", style={"margin": 0}),
+                html.P(f"🔥 {score}/100", style={"margin": 0, "fontSize": "14px", "color": "#00ff99"})
+            ])
+        ], style={
+            "display": "flex",
+            "alignItems": "center",
+            "backgroundColor": "#1e1e1e",
+            "padding": "10px 15px",
+            "borderRadius": "8px",
+            "marginRight": "10px",
+            "boxShadow": "0 0 5px #00ff99"
+        }))
+
+    return html.Div(cards, style={
+        "display": "flex",
+        "overflowX": "auto",
+        "gap": "15px"
+    })
+
+@app.callback(
+    Output('player-info-container', 'children'),
+    Input('player-dropdown', 'value'),
+    Input('clicked-player', 'data'),
+)
+def update_player_info(selected_players, clicked_player):
+    if not selected_players:
+        return html.Div("Select a player to see their profile", style={"color": "#888"})
+
+    cards = []
+    for player in selected_players:
+        info = player_metadata.get(player)
+        if not info:
+            continue
+
+        # getting avatar path.
+        avatar_path = f"/assets/avatars/{player.lower().replace(' ', '_')}.jpg"
+
+        # checking if this player was clicked(to expand their card).
+        is_expanded = (clicked_player == player)
+
+        # Base layout of the player card.
+        base_card = html.Div([
+            html.Img(src=avatar_path,
+                     style={
+                       "width": "70px",
+                       "height": "70px",
+                       "borderRadius": "50%",
+                       "marginBottom": "10px"
+                    }
+            ),
+            html.H3(player),
+            html.P(f"Club: {info['club']}"),
+            html.P(f"Country: {info['country']}"),
+            html.P(f"Position: {info['position']}"),
+        ])
+
+        # Extra section only shown if player was clicked.
+        expanded_section = html.Div([
+            html.Hr(style={"borderTop": "1px solid #555"}),
+            html.P(info['bio'], style={"fontStyle": "italic", "color": "#aaa"}),
+        ]) if is_expanded else None
+
+        # wrapping the base card and expanded section inside a button.
+        cards.append(html.Button(
+            html.Div([base_card, expanded_section], style={
+                "textAlign": "center",
+                "padding": "10px",
+                "backgroundColor": "#1c1c1c",
+                "borderRadius": "8px",
+                "width": "220px",
+                "boxShadow": "0 0 5px #00ff99",
+                "marginRight": "20px",
+        }),
+            id={'type': 'player-card', 'index': player},
+            n_clicks=0,
+            style={"border": "none", "background": "none", "padding": 0, "cursor": "pointer"}
+        ))
+
+    return html.Div(cards, style={
+        "display": "flex",
+        "flexWrap": "wrap",
+        "gap": "20px"
+    })
 
 # Run.
 if __name__ == "__main__":
