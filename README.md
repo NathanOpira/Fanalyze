@@ -2,7 +2,7 @@
 
 *Fanalyze* is a global-facing sports analytics dashboard focused on tracking and visualizing the online popularity of African football stars.
 
-Built with Python and Plotly Dash, it offers real-time insights into how players are trending digitally — starting with Google Trends data, with plans to expand into platforms like TikTok, Instagram, and news media.
+Built with Python and Plotly Dash, it offers real-time insights into how players are trending digitally,starting with Google Trends data, with plans to expand into platforms like TikTok, Instagram, and news media.
 
 ---
 
