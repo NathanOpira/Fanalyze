@@ -440,10 +440,15 @@ def update_player_info(selected_players, clicked_player):
         ])
 
         # Extra section only shown if player was clicked.
-        expanded_section = html.Div([
-            html.Hr(style={"borderTop": "1px solid #555"}),
-            html.P(info['bio'], style={"fontStyle": "italic", "color": "#aaa"}),
-        ]) if is_expanded else None
+        expanded_section = None
+        if is_expanded:
+            expanded_section = html.Div([
+                html.Hr(style={"borderTop": "1px solid #555"}),
+                html.P(info['bio'], style={"fontStyle": "italic", "color": "#aaa"}),
+            ],
+            className="expanded",
+            style={"maxHeight": "0"}
+            )
 
         # wrapping the base card and expanded section inside a button.
         cards.append(html.Button(
