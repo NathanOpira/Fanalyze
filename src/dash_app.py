@@ -21,11 +21,11 @@ app.title = "Fanalyze Dashboard"
 # Layout.
 app.layout = html.Div([
     html.Div([
-        html.Img(src="/assets/logo.png", style={"height": "70px", "marginBottom": "10px"})
+        html.Img(src="/assets/logo.jpg", style={"height": "70px", "marginBottom": "10px"})
     ], style={"textAlign": "center"}),
 
     html.H1(
-        "📈 Fanalyze: African Footballer Popularity Trends",
+        "Fanalyze: African Footballer Popularity Trends",
         style={"textAlign": "center", "color": "#2c3e5o", "fontWeight": "bold", "marginTop": "30px", "fontSize": "36px"}
     ),
 
