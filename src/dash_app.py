@@ -21,13 +21,15 @@ app.title = "Fanalyze Dashboard"
 # Layout.
 app.layout = html.Div([
     html.Div([
-        html.Img(src="/assets/logo.jpg", style={"height": "70px", "marginBottom": "10px"})
-    ], style={"textAlign": "center"}),
-
-    html.H1(
-        "Fanalyze: African Footballer Popularity Trends",
-        style={"textAlign": "center", "color": "#2c3e5o", "fontWeight": "bold", "marginTop": "30px", "fontSize": "36px"}
-    ),
+        html.Img(src="/assets/logo.jpg", style={"height": "60px", "marginRight": "15px"})
+        html.H1("Fanalyze: African Footballer Popularity Trends"),
+    ],  style={
+        "display": "flex",
+        "alignItems": "center",
+        "backgroundColor": "#0F172A",
+        "padding": "15px",
+        "boxShadow": "0 2px 4px rgba(0, 0, 0, 0.2)",
+    }),
 
     dcc.Dropdown(
         id='player-dropdown',
@@ -43,6 +45,16 @@ app.layout = html.Div([
     html.Div(
         id='player-summary-container',
         style={"display": "flex", "justifyContent": "space-around", "margin": "40px"}
+    ),
+
+    html.Footer(
+        "© 2025 Fanalyze. Built by Nate 🇺🇬",
+        style={
+            "textAlign": "center",
+            "padding": "20px",
+            "color": "#9CA3AF",
+            "backgroundColor": "#0F172A"
+        }
     ),
 ])
 
@@ -60,6 +72,13 @@ def update_graph(selected_players):
                   labels={"value": "Popularity", "index": "Date"},
                   title="Google Search Trends (Last 3 Months)")
     fig.update_layout(legend_title_text='Players')
+    fig.update_layout(
+        plot_bgcolor='#1F2937',
+        paper_bgcolor='#1F2937',
+        font=dict(color='#F9FAFB'),
+        title_font_size=24,
+        legend=dict(bgcolor='#111827', bordercolor='gray', borderwidth=1)
+    )
     return fig
 
 @app.callback(
