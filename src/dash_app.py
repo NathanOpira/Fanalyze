@@ -455,12 +455,17 @@ def update_player_info(selected_players, clicked_player):
         # Extra section only shown if player was clicked.
         expanded_section = None
         if is_expanded:
+            # Getting and converting YouTube link if necessary.
+            video_url = info.get("youtube_url")
+            if video_url and "youtu.be" in video_url:
+                video_id = video_url.split("/")[-1].split("?")[0]
+                video_url = f"https://www.youtube.com/embed/{video_id}"
+
             expanded_section = html.Div([
                 html.Hr(style={"borderTop": "1px solid #555"}),
                 html.P(info['bio'], style={"fontStyle": "italic", "color": "#aaa"}),
-
                 html.Iframe(
-                    src=info.get("youtube_url"),
+                    src=video_url,
                     width="100%",
                     height="180",
                     style={
