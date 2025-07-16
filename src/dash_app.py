@@ -7,13 +7,6 @@ import dash
 from dash import Dash, html, dcc, Input, Output
 import plotly.express as px
 
-import sys
-import os
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-from sentiment_scraper import fetch_recent_tweets, extract_keywords
-from wordcloud_generator import generate_wordcloud
-import os
-
 # Getting today's file.
 today = datetime.now().strftime("%Y-%m-%d")
 data_path = f"data/processed/google_trends_cleaned_{today}.csv"
@@ -506,30 +499,6 @@ def update_player_info(selected_players, clicked_player):
         "flexWrap": "wrap",
         "gap": "20px"
     })
-
-@app.callback(
-    Output('fan-buzz', 'children'),
-    Input('player-dropdown', 'value')
-)
-def update_fan_buzz(selected_players):
-    if not selected_players:
-        return html.Div("No players selected")
-
-    player = selected_players[0]  # Focus on the first selected player
-
-    try:
-        tweets = fetch_recent_tweets(player)
-        keywords = extract_keywords(tweets)
-        wordcloud_path = f"assets/wordclouds/{player.lower().replace(' ', '_')}_cloud.png"
-        generate_wordcloud(keywords, wordcloud_path)
-
-        return html.Div([
-            html.H3(f"Fan Buzz for {player}", style={"color": "#00ff99"}),
-            html.Img(src=f"/assets/wordclouds/{player.lower().replace(' ', '_')}_cloud.png",
-                     style={"width": "100%", "borderRadius": "10px", "marginTop": "10px"})
-        ])
-    except Exception as e:
-        return html.Div(f"Error generating fan buzz: {e}", style={"color": "red"})
 
 # Run.
 if __name__ == "__main__":
