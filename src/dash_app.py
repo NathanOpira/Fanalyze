@@ -16,83 +16,96 @@ df = pd.read_csv(data_path, index_col=0, parse_dates=True)
 
 # inserting players' metadata.
 player_metadata = {
-    "Elias Moriba": {
+    "Ilaix Moriba": {
         "club": "RB Leipzig",
         "country": "🇬🇳 Guinea",
         "position": "Midfielder",
-        "bio": "Highly rated for his strength and passing at a young age."
+        "bio": "Highly rated for his strength and passing at a young age.",
+        "youtube_url": "https://youtu.be/TnQF8Fk9RzM?si=RD5LsVcF4GJzoGbc"
     },
-    "Kamaldeen Suleimana": {
+    "Kamaldeen Sulemana": {
         "club": "Southampton",
         "country": "🇬🇭 Ghana",
         "position": "Winger",
-        "bio": "Electric speed and raw dribbling talent define his game."
+        "bio": "Electric speed and raw dribbling talent define his game.",
+        "youtube_url": "https://youtu.be/f8B6vvOpuAA?si=Bfnd81qcHsWhFutt"
     },
     "Carlos Baleba": {
         "club": "Brighton & Hove Albion",
         "country": "🇨🇲 Cameroon",
         "position": "Midfielder",
-        "bio": "Box-to-box engine with strong defensive instincts."
+        "bio": "Box-to-box engine with strong defensive instincts.",
+        "youtube_url": "https://youtu.be/8vAYT5eToNg?si=vLDBOpVU1jxZNiOl"
     },
     "Bryan Mbuemo": {
         "club": "Brentford",
         "country": "🇨🇲 Cameroon",
         "position": "Forward",
-        "bio": "Smart finisher and creative force in the Premier League."
+        "bio": "Smart finisher and creative force in the Premier League.",
+        "youtube_url": "https://youtu.be/-aCFZZ1W_Kw?si=MfFtQNXbMQAic2Fb"
     },
-    "Ismaila Saar": {
+    "Ismaila Sarr": {
         "club": "Olympique Marseille",
         "country": "🇸🇳 Senegal",
         "position": "Winger",
-        "bio": "Explosive pace and goal threat on the flanks."
+        "bio": "Explosive pace and goal threat on the flanks.",
+        "youtube_url": "https://youtu.be/W8APfDm23iM?si=-t0aX8FmWV9dV2v6"
     },
     "Mohamed Salah": {
         "club": "Liverpool",
         "country": "🇪🇬 Egypt",
         "position": "Forward",
-        "bio": "Global icon known for scoring, speed and leadership."
+        "bio": "Global icon known for scoring, speed and leadership.",
+        "youtube_url": "https://youtu.be/wwAtHUc0Pzk?si=0Qv6-nMHRrOP8AC4"
     },
-    "Sammy Chukweze": {
+    "Samuel Chukweze": {
         "club": "AC Milan",
         "country": "🇳🇬 Nigeria",
         "position": "Winger",
-        "bio": "Left-footed dribbler with flair and pace to burn."
+        "bio": "Left-footed dribbler with flair and pace to burn.",
+        "youtube_url": "https://youtu.be/Rsa5SfMtRxs?si=4P06LBY_D3-3inda"
     },
     "Antoine Semenyo": {
         "club": "Bournemouth",
         "country": "🇬🇭 Ghana",
         "position": "Forward",
-        "bio": "Direct attacker with strength and energy up front."
+        "bio": "Direct attacker with strength and energy up front.",
+        "youtube_url": "https://youtu.be/7NurJqDBdA0?si=EMK_dHGMjCahpopH"
     },
     "Achraf Hakimi": {
         "club": "Paris Saint-Germain",
         "country": "🇲🇦 Morocco",
         "position": "Right-back",
-        "bio": "Lightning fast fullback, a threat at both ends."
+        "bio": "Lightning fast fullback, a threat at both ends.",
+        "youtube_url": "https://youtu.be/wyadspWNnlY?si=8TDsIw3Kn1MyoHkR"
     },
     "Ademola Lookman": {
         "club": "Atalanta",
         "country": "🇳🇬 Nigeria",
         "position": "Winger",
-        "bio": "Versatile attacker with an eye for spectacular goals."
+        "bio": "Versatile attacker with an eye for spectacular goals.",
+        "youtube_url": "https://youtu.be/QTw8WYxpVCs?si=-JDXd45dxNFY56eB"
     },
     "Serhou Guirassy": {
         "club": "VfB Stuttgart",
         "country": "🇬🇳 Guinea",
         "position": "Striker",
-        "bio": "Aerial threat and clinical finisher in the Bundesliga."
+        "bio": "Aerial threat and clinical finisher in the Bundesliga.",
+        "youtube_url": "https://youtu.be/VkotyZtg-2o?si=lJDqzsUHeG_Gj44J"
     },
     "Bilal El Khannouss": {
         "club": "Genk",
         "country": "🇲🇦 Morocco",
         "position": "Midfielder",
-        "bio": "Young creator with strong vision and technique."
+        "bio": "Young creator with strong vision and technique.",
+        "youtube_url": "https://youtu.be/v9jdV1M6_lc?si=3t7jgBFJmHwpdkpX"
     },
     "Mohammed Kudus": {
         "club": "West Ham United",
         "country": "🇬🇭 Ghana",
         "position": "Midfielder",
-        "bio": "Explosive dribbler, equally strong as creator and scorer."
+        "bio": "Explosive dribbler, equally strong as creator and scorer.",
+        "youtube_url": "https://youtu.be/hv_iAX3j6lc?si=4kmfq7owMGpfqJqT"
     }
 }
 
@@ -445,10 +458,20 @@ def update_player_info(selected_players, clicked_player):
             expanded_section = html.Div([
                 html.Hr(style={"borderTop": "1px solid #555"}),
                 html.P(info['bio'], style={"fontStyle": "italic", "color": "#aaa"}),
+
+                html.Iframe(
+                    src=info.get("youtube_url"),
+                    width="100%",
+                    height="180",
+                    style={
+                        "border": "none",
+                        "marginTop": "10px",
+                        "borderRadius": "6px",
+                    }
+                )
             ],
             className="expanded",
-            style={"maxHeight": "0"}
-            )
+            style={"maxHeight": "0"})
 
         # wrapping the base card and expanded section inside a button.
         cards.append(html.Button(
